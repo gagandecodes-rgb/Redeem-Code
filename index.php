@@ -11,7 +11,18 @@ if (!$BOT_TOKEN || !$DATABASE_URL) {
     exit("Missing ENV variables");
 }
 
-$pdo = new PDO($DATABASE_URL, null, null, [
+// ================= DATABASE CONNECTION FIX =================
+$db = parse_url(getenv("DATABASE_URL"));
+
+$host = $db["host"];
+$port = $db["port"];
+$user = $db["user"];
+$pass = $db["pass"];
+$dbname = ltrim($db["path"], "/");
+
+$dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
+
+$pdo = new PDO($dsn, $user, $pass, [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 ]);
 
